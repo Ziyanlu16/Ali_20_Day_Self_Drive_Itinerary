@@ -26,9 +26,42 @@
 ## 行程统计
 - **总里程数**: 约4,346公里
 - **总用时**: 约70小时车程
-- **主要亮点**: 
+- **主要亮点**:
   - 神级景色: 曲登尼玛冰川
   - 神级观景点: 曲具拉垭口(马卡鲁峰)、贡措、亚洲一号观景台
   - 神级观景台: 普士拉垭口
   - 神级秘境: 乃夏村
   - 徒步体验: 介久措、白马林措
+
+## 强化学习：五子棋自对弈训练
+
+仓库中新增了一个使用深度Q网络（DQN）进行五子棋自对弈训练的示例，实现位于
+`gomoku_rl/` 目录下，并提供了 `train_gomoku.py` 脚本用于启动训练。
+
+### 主要特性
+
+- **GomokuEnv**：一个简洁的五子棋环境，支持自定义棋盘大小、胜利条件和奖励。
+- **DQNAgent**：使用残差卷积网络作为估值网络，结合经验回放和目标网络来稳定训练。
+- **自对弈训练流程**：通过 `train_gomoku.py` 脚本进行自对弈训练，可配置训练轮数、棋盘大小、评估频率等参数。
+
+### 运行示例
+
+```bash
+pip install numpy torch
+python train_gomoku.py --episodes 2000 --board-size 9 --device cpu
+```
+
+训练过程中会定期输出平均损失和自对弈胜率，并将模型参数保存到 `gomoku_agent.pt`。
+
+## 训练后对弈与可视化
+
+使用 `play_gomoku.py` 可以加载训练完成的模型进行对弈，并生成棋局动画。示例：
+
+```bash
+pip install matplotlib pillow
+python play_gomoku.py --checkpoint gomoku_agent.pt --games 3 --opponent random --save-dir demos
+```
+
+- `--opponent` 可选 `self`（默认，同一模型执黑白）或 `random`（与随机策略对弈）。
+- `--save-dir` 指定保存棋局 GIF 的目录，每局会生成一个 `game_*.gif` 动画，用红色或蓝色标记最新落子。
+- `--fps` 控制动画播放速度，默认 2 帧/秒。
