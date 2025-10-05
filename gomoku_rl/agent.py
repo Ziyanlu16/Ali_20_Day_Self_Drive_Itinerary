@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import random
+import os
 from collections import deque
 from dataclasses import dataclass
 from typing import Deque, List, Tuple
@@ -96,6 +97,12 @@ class DQNAgent:
         self.epsilon_start = epsilon_start
         self.epsilon_end = epsilon_end
         self.epsilon_decay = epsilon_decay
+
+    def load(self, checkpoint: str | bytes | os.PathLike[str]) -> None:
+        """Load network weights from a checkpoint file."""
+        state_dict = torch.load(checkpoint, map_location=self.device)
+        self.online_net.load_state_dict(state_dict)
+        self.target_net.load_state_dict(state_dict)
 
     def select_action(
         self,

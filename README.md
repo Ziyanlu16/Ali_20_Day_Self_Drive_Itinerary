@@ -52,3 +52,16 @@ python train_gomoku.py --episodes 2000 --board-size 9 --device cpu
 ```
 
 训练过程中会定期输出平均损失和自对弈胜率，并将模型参数保存到 `gomoku_agent.pt`。
+
+## 训练后对弈与可视化
+
+使用 `play_gomoku.py` 可以加载训练完成的模型进行对弈，并生成棋局动画。示例：
+
+```bash
+pip install matplotlib pillow
+python play_gomoku.py --checkpoint gomoku_agent.pt --games 3 --opponent random --save-dir demos
+```
+
+- `--opponent` 可选 `self`（默认，同一模型执黑白）或 `random`（与随机策略对弈）。
+- `--save-dir` 指定保存棋局 GIF 的目录，每局会生成一个 `game_*.gif` 动画，用红色或蓝色标记最新落子。
+- `--fps` 控制动画播放速度，默认 2 帧/秒。
